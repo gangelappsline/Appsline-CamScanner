@@ -33,6 +33,13 @@ android {
     }
 }
 
+dependencies {
+    // Añade esta línea para solucionar el error
+    implementation 'androidx.concurrent:concurrent-futures:1.2.0'
+
+    // ... tus otras dependencias
+}
+
 flutter {
     source = "../.."
 }

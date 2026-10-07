@@ -41,7 +41,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   Future<void> _addFromGallery() async {
     try {
-      final image = await _picker.pickImage(imageQuality: 96, maxWidth: 2600);
+      final image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 96, maxWidth: 2600);
       if (!mounted || image == null) return;
       await _saveNewPage(image.path);
     } catch (_) {
