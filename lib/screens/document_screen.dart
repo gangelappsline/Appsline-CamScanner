@@ -250,7 +250,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
               if (_isWorking)
                 Positioned.fill(
                   child: ColoredBox(
-                    color: Colors.white.withOpacity(0.78),
+                    color: Colors.white.withValues(alpha: 0.78),
                     child: const Center(child: CircularProgressIndicator()),
                   ),
                 ),

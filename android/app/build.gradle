@@ -6,22 +6,27 @@ plugins {
 
 android {
     namespace = "com.appsline.camscanner"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Versiones fijadas según el entorno del proyecto (Android SDK 37.0.0):
+    // compileSdk 36, targetSdk 36 y NDK 28.2.13676358.
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    // Kotlin 2.x (KGP 2.3.20): `kotlinOptions` está obsoleto, se usa `compilerOptions`.
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
     }
 
     defaultConfig {
         applicationId = "com.appsline.camscanner"
         minSdk = 24
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -34,10 +39,8 @@ android {
 }
 
 dependencies {
-    // Añade esta línea para solucionar el error
+    // Evita el conflicto de ListenableFuture con los plugins de cámara.
     implementation 'androidx.concurrent:concurrent-futures:1.2.0'
-
-    // ... tus otras dependencias
 }
 
 flutter {

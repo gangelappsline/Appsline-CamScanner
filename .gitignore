@@ -27,6 +27,7 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
@@ -43,3 +44,21 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android: rutas locales y cachés de Gradle (específicos de cada máquina,
+# se regeneran con `flutter pub get` / `flutter run`)
+/android/local.properties
+/android/.gradle/
+/android/build/
+/android/app/build/
+*.jks
+*.keystore
+
+# iOS: archivos generados por Flutter/CocoaPods (específicos de cada máquina,
+# se regeneran con `flutter pub get` y `pod install`)
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/ephemeral/
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Flutter.podspec
