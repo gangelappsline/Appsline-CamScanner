@@ -41,7 +41,11 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   Future<void> _addFromGallery() async {
     try {
-      final image = await _picker.pickImage(source: ImageSource.gallery, imageQuality: 96, maxWidth: 2600);
+      final image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 96,
+        maxWidth: 2600,
+      );
       if (!mounted || image == null) return;
       await _saveNewPage(image.path);
     } catch (_) {
@@ -80,7 +84,8 @@ class _DocumentScreenState extends State<DocumentScreen> {
               const SizedBox(height: 16),
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const _SheetIcon(icon: Icons.document_scanner_outlined),
+                leading:
+                    const _SheetIcon(icon: Icons.document_scanner_outlined),
                 title: const Text('Escanear con cámara'),
                 subtitle: const Text('Captura otra página'),
                 onTap: () {
@@ -131,7 +136,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
             child: const Text('Cancelar'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFC9364D)),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFC9364D),
+            ),
             onPressed: () => Navigator.pop(dialogContext, true),
             child: const Text('Eliminar'),
           ),
@@ -146,33 +153,52 @@ class _DocumentScreenState extends State<DocumentScreen> {
   Future<void> _rename() async {
     final current = document;
     if (current == null) return;
+
     final controller = TextEditingController(text: current.title);
-    final newTitle = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Renombrar documento'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          maxLength: 60,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(hintText: 'Ej. Facturas octubre'),
-          onSubmitted: (value) => Navigator.pop(dialogContext, value),
+
+    try {
+      final newTitle = await showDialog<String>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Renombrar documento'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            maxLength: 60,
+            textCapitalization: TextCapitalization.sentences,
+            decoration:
+                const InputDecoration(hintText: 'Ej. Facturas octubre'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: () =>
+                  Navigator.pop(dialogContext, controller.text.trim()),
+              child: const Text('Guardar'),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(dialogContext, controller.text),
-            child: const Text('Guardar'),
-          ),
-        ],
-      ),
-    );
-    controller.dispose();
-    if (newTitle != null) await widget.store.rename(current.id, newTitle);
+      );
+
+      // Solo renombramos si hay un título válido y distinto al actual
+      if (newTitle == null) return;
+      final trimmed = newTitle.trim();
+      if (trimmed.isEmpty) {
+        if (mounted) _showMessage('El nombre no puede estar vacío.');
+        return;
+      }
+      if (trimmed == current.title) return;
+
+      await widget.store.rename(current.id, trimmed);
+    } catch (e) {
+      if (mounted) _showMessage('No se pudo renombrar el documento.');
+    } finally {
+      // Liberamos el controller SIEMPRE, una vez que el diálogo ya cerró
+      controller.dispose();
+    }
   }
 
   Future<void> _exportPdf() async {
@@ -208,7 +234,9 @@ class _DocumentScreenState extends State<DocumentScreen> {
       builder: (context, _) {
         final current = document;
         if (current == null) {
-          return const Scaffold(body: Center(child: Text('Documento no encontrado')));
+          return const Scaffold(
+            body: Center(child: Text('Documento no encontrado')),
+          );
         }
         return Scaffold(
           appBar: AppBar(
@@ -220,7 +248,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
             actions: [
               IconButton(
                 tooltip: 'Renombrar',
-                onPressed: _rename,
+                onPressed: _isWorking ? null : _rename,
                 icon: const Icon(Icons.edit_outlined),
               ),
               const SizedBox(width: 4),
@@ -357,17 +385,26 @@ class _PageCard extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
-                  const Icon(Icons.drag_indicator_rounded, color: Color(0xFFA0A8B3)),
+                  const Icon(
+                    Icons.drag_indicator_rounded,
+                    color: Color(0xFFA0A8B3),
+                  ),
                   PopupMenuButton<String>(
                     onSelected: (value) {
                       if (value == 'delete') onDelete();
                     },
                     itemBuilder: (_) => const [
-                      PopupMenuItem(value: 'delete', child: Text('Eliminar página')),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text('Eliminar página'),
+                      ),
                     ],
                     child: const Padding(
                       padding: EdgeInsets.all(7),
-                      child: Icon(Icons.more_horiz_rounded, color: Color(0xFF7A8491)),
+                      child: Icon(
+                        Icons.more_horiz_rounded,
+                        color: Color(0xFF7A8491),
+                      ),
                     ),
                   ),
                 ],

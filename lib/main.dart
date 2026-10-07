@@ -1,6 +1,7 @@
+/*import 'package:appsline_cam_scanner/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/document_store.dart';
 
 Future<void> main() async {
@@ -92,7 +93,52 @@ class CamScannerApp extends StatelessWidget {
           labelStyle: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
-      home: HomeScreen(store: store),
+      home: AppslineSplash(nextScreen: HomeScreen(store: store),), //HomeScreen(store: store),
+    );
+  }
+}*/
+
+// lib/main.dart
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:appsline_cam_scanner/screens/splash_screen.dart';
+import 'package:appsline_cam_scanner/screens/home_screen.dart';
+import 'package:appsline_cam_scanner/services/document_store.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final store = DocumentStore.instance;
+  await store.initialize();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Color(0xFF040A1C),
+    ),
+  );
+  runApp(AppslineApp(store: store));
+}
+
+class AppslineApp extends StatelessWidget {
+  const AppslineApp({super.key, required this.store});
+
+  final DocumentStore store;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Appsline',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF2F6BFF),
+      ),
+      home: AppslineSplash(
+        nextScreen: HomeScreen(store: store),
+      ),
     );
   }
 }
+
+
