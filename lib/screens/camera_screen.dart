@@ -195,7 +195,7 @@ class _RoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black.withOpacity(0.38),
+      color: Colors.black.withValues(alpha: 0.38),
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,
@@ -264,7 +264,7 @@ class _ScanFramePainter extends CustomPainter {
       height: height,
     );
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.9)
+      ..color = Colors.white.withValues(alpha: 0.9)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

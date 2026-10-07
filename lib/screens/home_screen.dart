@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (_isBusy)
                 Positioned.fill(
                   child: ColoredBox(
-                    color: Colors.white.withOpacity(0.78),
+                    color: Colors.white.withValues(alpha: 0.78),
                     child: const Center(
                       child: _BusyIndicator(label: 'Preparando documento…'),
                     ),
